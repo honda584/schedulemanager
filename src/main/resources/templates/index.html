@@ -1,0 +1,104 @@
+<!-- src/main/resources/templates/index.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>スケジュール管理</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .calendar-nav {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .calendar-nav a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: #007bff;
+        }
+        .calendar {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .calendar th {
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+        .calendar td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            height: 100px;
+            vertical-align: top;
+        }
+        .calendar .other-month {
+            background-color: #f5f5f5;
+            color: #999;
+        }
+        .schedule-item {
+            margin-bottom: 5px;
+            padding: 5px;
+            background-color: #e3f2fd;
+            border-radius: 3px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .add-schedule {
+            display: block;
+            margin-top: 5px;
+            font-size: 12px;
+            color: #007bff;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>スケジュール管理</h1>
+    
+    <div class="calendar-nav">
+        <a th:href="@{/(year=${prevYear},month=${prevMonth})}">&lt; 前月</a>
+        <span th:text="${currentYear} + '年' + ${currentMonth} + '月'"></span>
+        <a th:href="@{/(year=${nextYear},month=${nextMonth})}">次月 &gt;</a>
+    </div>
+    
+    <table class="calendar">
+        <thead>
+            <tr>
+                <th>日</th>
+                <th>月</th>
+                <th>火</th>
+                <th>水</th>
+                <th>木</th>
+                <th>金</th>
+                <th>土</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="week : ${calendar}">
+                <td th:each="date : ${week}" th:class="${date.month.value != currentMonth} ? 'other-month' : ''">
+                    <div th:text="${date.dayOfMonth}"></div>
+                    
+                    <div th:if="${date.month.value == currentMonth}">
+                        <div th:each="schedule : ${scheduleMap.get(date)}" class="schedule-item" 
+                             th:onclick="'window.location.href=\'/schedule/' + ${schedule.id} + '\''">
+                            <span th:text="${#temporals.format(schedule.startTime, 'HH:mm')} + '-' + ${#temporals.format(schedule.endTime, 'HH:mm')}"></span>:
+                            <span th:text="${#strings.abbreviate(schedule.description, 10)}"></span>
+                        </div>
+                        
+                        <a th:href="@{/schedule/create(date=${date})}" class="add-schedule">+ 予定追加</a>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

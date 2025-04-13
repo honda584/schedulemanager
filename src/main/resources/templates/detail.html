@@ -1,0 +1,100 @@
+<!-- src/main/resources/templates/detail.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>予定詳細</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .schedule-detail {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .detail-item {
+            margin-bottom: 15px;
+        }
+        .detail-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .detail-value {
+            padding: 8px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .button-group {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .button {
+            padding: 10px 15px;
+            border-radius: 4px;
+            text-decoration: none;
+            text-align: center;
+        }
+        .back-button {
+            background-color: #6c757d;
+            color: white;
+        }
+        .delete-form {
+            display: inline;
+        }
+        .delete-button {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>予定詳細</h1>
+    
+    <div class="schedule-detail">
+        <div class="detail-item">
+            <div class="detail-label">日付</div>
+            <div class="detail-value" th:text="${#temporals.format(schedule.date, 'yyyy年MM月dd日')}"></div>
+        </div>
+        
+        <div class="detail-item">
+            <div class="detail-label">時間</div>
+            <div class="detail-value">
+                <span th:text="${#temporals.format(schedule.startTime, 'HH:mm')}"></span>
+                ～
+                <span th:text="${#temporals.format(schedule.endTime, 'HH:mm')}"></span>
+            </div>
+        </div>
+        
+        <div class="detail-item">
+            <div class="detail-label">予定詳細</div>
+            <div class="detail-value" th:text="${schedule.description}"></div>
+        </div>
+        
+        <div class="button-group">
+            <a th:href="@{/}" class="button back-button">戻る</a>
+            
+            <form th:action="@{/schedule/delete/{id}(id=${schedule.id})}" method="post" class="delete-form">
+                <button type="submit" class="delete-button" onclick="return confirm('この予定をキャンセルしますか？')">
+                    キャンセル
+                </button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

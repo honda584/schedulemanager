@@ -1,0 +1,106 @@
+<!-- src/main/resources/templates/create.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>予定登録</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        form {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .time-group {
+            display: flex;
+            gap: 10px;
+        }
+        .time-group .form-group {
+            flex: 1;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        a {
+            display: inline-block;
+            margin-top: 10px;
+            color: #007bff;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>予定登録</h1>
+    
+    <form th:action="@{/schedule/save}" th:object="${schedule}" method="post">
+        <div class="form-group">
+            <label for="date">日付</label>
+            <input type="date" id="date" th:field="*{date}" readonly>
+        </div>
+        
+        <div class="time-group">
+            <div class="form-group">
+                <label for="startTime">開始時間</label>
+                <input type="time" id="startTime" th:field="*{startTime}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="endTime">終了時間</label>
+                <input type="time" id="endTime" th:field="*{endTime}" required>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="description">予定詳細</label>
+            <textarea id="description" th:field="*{description}" rows="4" required></textarea>
+        </div>
+        
+        <button type="submit">登録する</button>
+        <a th:href="@{/}">キャンセル</a>
+    </form>
+    
+    <script>
+        // 終了時間が開始時間より後になることを確認する
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const startTime = document.getElementById('startTime').value;
+            const endTime = document.getElementById('endTime').value;
+            
+            if (startTime >= endTime) {
+                e.preventDefault();
+                alert('終了時間は開始時間より後に設定してください。');
+            }
+        });
+    </script>
+</body>
+</html>
